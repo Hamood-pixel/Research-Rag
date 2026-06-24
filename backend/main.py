@@ -2,6 +2,9 @@ import os
 from fastapi import FastAPI, UploadFile, File #acts as chef working with backend 
 import uvicorn #handles the server routing, acts as waiter
 
+from langchain_ollama import OllamaLLM
+
+
 #importing the functions from the files we made in backend
 from processor import process_pdf
 from db import create_embeddings, get_retriever
