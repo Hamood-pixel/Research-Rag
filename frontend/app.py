@@ -37,7 +37,21 @@ with st.sidebar:
     if user_query:
         with st.chat_message("user"):
             st.markdown(user_query)
+        #call the backend API to get answer from LLM    
         with st.chat_message("assistant"):
-            st.markdown("Pipeline handshake complete! Next, we link our local LLM framework.")
-        
+            with st.spinner("Generating response..."):
+                try:
+                    payload = {"question": user_query} #Convert into JSON format to send to backend
 
+                    response = requests.post("http://localhost:8000/query", json=payload)
+
+                    if response.status_code == 200:
+                        result = response.json()
+                        if result.status_code == "success" or result.get("status") == "success":
+                            st.markdown(result["answer"])
+                        else:
+                            st.error(f"Error from backend: {result.get('message', 'Unknown error')}")
+                    else:
+                        st.error(f"Failed to get response from backend. Status code: {response.status_code}")
+                except Exception as e:
+                    st.error(f"Could not connect to backend : {str(e)}")

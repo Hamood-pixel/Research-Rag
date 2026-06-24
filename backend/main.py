@@ -16,7 +16,7 @@ os.makedirs(UPLOAD_DIRECTORY, exist_ok = True) #create the uploads directory if 
 
 @app.get("/")
 def home():
-    return {"status: online", "message: Research Rag is up and running!"}
+    return {"status": "online", "message": "Research Rag is up and running!"}
 
 @app.post("/upload") #API endpoints to upload the file, this would be called by the frontend when the user uploads a file
 async def upload_file(file: UploadFile = File(...)):
@@ -35,9 +35,6 @@ async def upload_file(file: UploadFile = File(...)):
         if os.path.exists(file_path):   
             os.remove(file_path) #delete the uploaded file after processing to prevent ssd overloading 
 
-if __name__ == "__main__":
-    uvicorn.run(app, host = "0.0.0.0", port = 8000) #run the app on localhost:8000
-
 @app.post("/query") #API endpoint to handle user queries, this would be called by the frontend to talk to the backend and get answers from the LLM
 async def query_paper(payload: dict): #payload is the actual data to be sent to the LLM
     """
@@ -49,8 +46,8 @@ async def query_paper(payload: dict): #payload is the actual data to be sent to 
         return {"status": "error", "message": "No question provided."}
     
     try: 
-        retriver = get_retriever() #get the retriever object from the db.py file
-        relevant_chunks = get_retriever.invoke(user_question)
+        retriever = get_retriever() #get the retriever object from the db.py file
+        relevant_chunks = retriever.invoke(user_question)
         
         #combine the relevant chunks into a single string to send to the LLM
         context = " ".join([chunk.page_content for chunk in relevant_chunks])
@@ -66,5 +63,7 @@ async def query_paper(payload: dict): #payload is the actual data to be sent to 
 
         return {"status": "success", "answer": response}
     except Exception as e:
-        {"status": "error", "message": str(e)}
-        
+        return {"status": "error", "message": str(e)}
+
+if __name__ == "__main__":
+    uvicorn.run(app, host = "0.0.0.0", port = 8000) #run the app on localhost:8000
