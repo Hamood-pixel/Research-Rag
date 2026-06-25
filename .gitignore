@@ -4,3 +4,5 @@ __pycache__/
 data/
 temp_uploads/
 *.pdf
+backend/chroma_db/
+backend/uploads/

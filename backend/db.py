@@ -10,7 +10,7 @@ def create_embeddings(chunks, db_path = db_directory):
     """
     Takes in chunks, create vector embeddings and stores them in the vector database whose path is defined in the arguments
     """  
-    vector_db = Chroma.from_documents(docements = chunks, embedding = embeddings, persist_directory = db_path) #use chroma class to create vector embeddings
+    vector_db = Chroma.from_documents(documents = chunks, embedding = embeddings, persist_directory = db_path) #use chroma class to create vector embeddings
 
     return vector_db
 
