@@ -47,7 +47,7 @@ with st.sidebar:
 
                     if response.status_code == 200:
                         result = response.json()
-                        if result.status_code == "success" or result.get("status") == "success":
+                        if result.get("status") == "success":
                             st.markdown(result["answer"])
                         else:
                             st.error(f"Error from backend: {result.get('message', 'Unknown error')}")
